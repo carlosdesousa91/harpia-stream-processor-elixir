@@ -14,8 +14,8 @@ services:
       - harpia_elx
     volumes:
       - ./src:/app
-      - /app/deps/
-      - /app/_build/
+      - /app/deps/ # this excludes the /app/deps/ folder from the volume
+      - /app/_build/ # this excludes the /app/_build/ folder from the volume
     depends_on:
       - zookeeper
       - kafka

@@ -12,11 +12,11 @@ help:
 build:
 	docker-compose build
 
-.PHONY: up ## docker-compose up
+.PHONY: up ## docker-compose up -d --build --force-recreate
 up:
 	docker-compose up -d --build --force-recreate
 
-.PHONY: down ## docker-compose down
+.PHONY: down ## docker-compose down --remove-orphans
 down:
 	docker-compose down --remove-orphans
 
