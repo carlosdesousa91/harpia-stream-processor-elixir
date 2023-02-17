@@ -16,4 +16,7 @@ config :kaffe,
     topics: ["our_topic", "another_topic"],     # the topic(s) that will be consumed
     consumer_group: "example-consumer-group",   # the consumer group for tracking offsets in Kafka
     message_handler: ExampleConsumer,           # the module that will process messages
+    offset_reset_policy: :reset_to_latest,
+    max_bytes: 50_000_000,                      # 50MB
+    worker_allocation_strategy: :worker_per_partition,
   ]

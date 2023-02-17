@@ -4,10 +4,12 @@ defmodule ExampleConsumer do
   # MUST return :ok
   # Can do anything else within the function with the incoming message
 
-  def handle_message(%{key: key, value: value} = message) do
-    IO.inspect(message)
-    IO.puts("ExampleConsumer called")
-    IO.puts("#{key}: #{value}")
+  def handle_messages(messages) do
+    for %{key: key, value: value} = message <- messages do
+      # IO.inspect(message)
+      # IO.puts("ExampleConsumer called")
+      IO.puts("#{key}: #{value}")
+    end
     :ok
   end
 end
