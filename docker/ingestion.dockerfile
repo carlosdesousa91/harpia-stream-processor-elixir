@@ -6,15 +6,19 @@ RUN apt-get update && \
     mix local.hex --force && \
     mix local.rebar --force
 
+# ENV MIX_ENV dev
 ENV APP_HOME /app
-RUN mkdir $APP_HOME
 WORKDIR $APP_HOME
 
-COPY ./src .
+COPY ./src/mix.exs ./src/mix.lock $APP_HOME/
+# RUN mix deps.get --only=$MIX_ENV
+RUN mix deps.get --only=$MIX_ENV
 
-RUN mix deps.get
+COPY ./src $APP_HOME
 
 EXPOSE 4000
+
+CMD ["mix", "run", "--no-halt"]
 
 # CMD ["iex -S mix"]
 

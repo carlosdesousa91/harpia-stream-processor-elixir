@@ -12,16 +12,20 @@ help:
 build:
 	docker-compose build
 
-.PHONY: up-kafka ## docker-compose up for kafka containers
-up-kafka:
-	docker-compose up -d harpia_db_elx zookeeper kafka kafdrop cmak
+.PHONY: up ## docker-compose up
+up:
+	docker-compose up -d --build --force-recreate
 
-.PHONY: run-ingestion ## docker-compose run for harpia_ingestion_ex with iex
-run-ingestion:
+.PHONY: down ## docker-compose down
+down:
+	docker-compose down --remove-orphans
+
+.PHONY: iex ## iex -S mix (docker exec -it harpia_ingestion_ex sh -c "iex -S mix")
+iex:
 	@echo "========================================================================================"
 	@echo "This will run harpia_ingestion_ex, with an iex terminal prompt"
 	@echo "To test the application, run:"
 	@echo 'ExampleProducer.send_my_message({"Metamorphosis", "Franz Kafka"}, "another_topic")'
 	@echo "========================================================================================"
 	@echo ""
-	docker-compose run harpia_ingestion_ex iex -S mix
+	docker exec -it harpia_ingestion_ex sh -c "iex -S mix"

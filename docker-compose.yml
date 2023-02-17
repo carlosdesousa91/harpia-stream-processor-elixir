@@ -6,34 +6,21 @@ services:
       dockerfile: ./docker/ingestion.dockerfile
       context: .
     container_name: harpia_ingestion_ex
+    environment:
+      MIX_ENV: dev
     ports:
       - "4000:4000"
     networks:
       - harpia_elx
     volumes:
       - ./src:/app
+      - /app/deps/
     depends_on:
-      - harpia_db_elx
       - zookeeper
       - kafka
+    # command: bash -c "mix deps.get"
     # command: bash -c "iex -S mix"
   
-  harpia_db_elx:
-    build:
-      dockerfile: ./docker/postgres.dockerfile
-      context: .
-    container_name: harpia_db_elx
-    environment:
-      - POSTGRES_DB=harpia_siem
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    ports:
-      - "5432:5432"
-    networks:
-      - harpia_elx
-    volumes:
-      - pgdata:/var/lib/postgresql/data/
-
   # kafka services
   zookeeper:
     image: 'bitnami/zookeeper:3.7.0'
@@ -87,27 +74,11 @@ services:
     depends_on:
       - kafka
 
-  cmak:
-    image: ghcr.io/eshepelyuk/dckr/cmak-3.0.0.5:latest
-    container_name: cmak
-    restart: always
-    command:
-      - "-Dcmak.zkhosts=zookeeper:2181"
-      - "-DbasicAuthentication.enabled=true"
-      - "-DbasicAuthentication.username=username"
-      - "-DbasicAuthentication.password=password"
-    ports:
-      - "9005:9000"
-    networks:
-      - harpia_elx
-
 networks:
   harpia_elx:
     driver: bridge
 
 volumes:
-  pgdata:
-    driver: local
   zookeeperdata:
     driver: local
   kafkadata:
