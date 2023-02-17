@@ -15,11 +15,10 @@ services:
     volumes:
       - ./src:/app
       - /app/deps/
+      - /app/_build/
     depends_on:
       - zookeeper
       - kafka
-    # command: bash -c "mix deps.get"
-    # command: bash -c "iex -S mix"
   
   # kafka services
   zookeeper:
@@ -32,7 +31,6 @@ services:
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
     volumes:
-      # - ./bitnami/zookeeper:/bitnami/zookeeper
       - zookeeperdata:/bitnami/zookeeper
   
   kafka:
@@ -58,7 +56,6 @@ services:
     depends_on:
       - zookeeper
     volumes:
-      # - ./bitnami/kafka:/bitnami/kafka
       - kafkadata:/bitnami/kafka
 
   kafdrop:
