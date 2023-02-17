@@ -2,7 +2,9 @@ FROM elixir
 
 RUN apt-get update && \
     apt-get install -y postgresql-client && \
-    apt-get install -y inotify-tools
+    apt-get install -y inotify-tools && \
+    mix local.hex --force && \
+    mix local.rebar --force
 
 ENV APP_HOME /app
 RUN mkdir $APP_HOME
@@ -10,11 +12,11 @@ WORKDIR $APP_HOME
 
 COPY ./src .
 
-RUN mix local.hex --force && \
-    mix local.rebar --force && \
-    mix deps.get
+RUN mix deps.get
 
-CMD ["iex", "-S mix"]
+EXPOSE 4000
+
+# CMD ["iex -S mix"]
 
 
 

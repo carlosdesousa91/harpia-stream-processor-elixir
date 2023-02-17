@@ -1,19 +1,22 @@
 version: '3.8'
 
 services:
-  # harpia_ingestion_ex:
-  #   build: 
-  #     dockerfile: ./docker/ingestion.dockerfile
-  #     context: .
-  #   container_name: harpia_ingestion_ex
-  #   ports:
-  #     - "4000:4000"
-  #   networks:
-  #     - harpia_elx
-  #   volumes:
-  #     - ./src:/app
-  #   depends_on:
-  #     - harpia_db_elx
+  harpia_ingestion_ex:
+    build: 
+      dockerfile: ./docker/ingestion.dockerfile
+      context: .
+    container_name: harpia_ingestion_ex
+    ports:
+      - "4000:4000"
+    networks:
+      - harpia_elx
+    volumes:
+      - ./src:/app
+    depends_on:
+      - harpia_db_elx
+      - zookeeper
+      - kafka
+    # command: bash -c "iex -S mix"
   
   harpia_db_elx:
     build:
