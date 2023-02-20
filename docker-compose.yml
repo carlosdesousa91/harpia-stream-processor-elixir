@@ -14,12 +14,11 @@ services:
       - harpia_elx
     volumes:
       - ./src:/app
-      - /app/deps/
+      - /app/deps/ # this excludes the /app/deps/ folder from the volume
+      - /app/_build/ # this excludes the /app/_build/ folder from the volume
     depends_on:
       - zookeeper
       - kafka
-    # command: bash -c "mix deps.get"
-    # command: bash -c "iex -S mix"
   
   # kafka services
   zookeeper:
@@ -32,7 +31,6 @@ services:
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
     volumes:
-      # - ./bitnami/zookeeper:/bitnami/zookeeper
       - zookeeperdata:/bitnami/zookeeper
   
   kafka:
@@ -58,7 +56,6 @@ services:
     depends_on:
       - zookeeper
     volumes:
-      # - ./bitnami/kafka:/bitnami/kafka
       - kafkadata:/bitnami/kafka
 
   kafdrop:
