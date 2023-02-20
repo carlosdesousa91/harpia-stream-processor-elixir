@@ -2,9 +2,11 @@ defmodule ElixirKaffeCodealong.Application do
   use Application # read more about Elixir's Application module here: https://hexdocs.pm/elixir/Application.html
 
   def start(_type, _args) do
-    # import Supervisor.Spec
+    # Send these messages to ensure the topic exist
+    ExampleProducer.send_my_message({"test", "Test Message"}, "our_topic")
+    ExampleProducer.send_my_message({"test", "Test Message"}, "another_topic")
+
     children = [
-      # worker(Kaffe.Consumer, []) # calls to start Kaffe's Consumer module
       %{
         id: Kaffe.GroupMemberSupervisor,
         start: {Kaffe.GroupMemberSupervisor, :start_link, []},

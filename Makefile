@@ -7,6 +7,13 @@ help:
 	@grep -E '^\.PHONY: [a-zA-Z_-]+ .*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = "(: |##)"}; {printf "\033[36m%-15s\033[0m %s\n", $$2, $$3}'
 	@echo "========================================================================================"
 	@echo ""
+	@echo "To prepare Python in a virtual environment to execute tests, please run:"
+	@echo "\t virtualenv .venv"
+	@echo "\t source ./.venv/bin/activate"
+	@echo "\t pip install kafka-python"
+	@echo ""
+	@echo "========================================================================================"
+	@echo ""
 
 .PHONY: build ## docker-compose build
 build:
@@ -29,3 +36,7 @@ iex:
 	@echo "========================================================================================"
 	@echo ""
 	docker exec -it harpia_ingestion_ex sh -c "iex -S mix"
+
+.PHONY: produce-logs ## run python kafka_producer_test.py to produce logs
+produce-logs:
+	python kafka_producer_test.py
