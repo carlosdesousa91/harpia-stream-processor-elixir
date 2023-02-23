@@ -6,34 +6,20 @@ services:
       dockerfile: ./docker/ingestion.dockerfile
       context: .
     container_name: harpia_ingestion_ex
+    environment:
+      MIX_ENV: dev
     ports:
       - "4000:4000"
     networks:
       - harpia_elx
     volumes:
       - ./src:/app
+      - /app/deps/ # this excludes the /app/deps/ folder from the volume
+      - /app/_build/ # this excludes the /app/_build/ folder from the volume
     depends_on:
-      - harpia_db_elx
       - zookeeper
       - kafka
-    # command: bash -c "iex -S mix"
   
-  harpia_db_elx:
-    build:
-      dockerfile: ./docker/postgres.dockerfile
-      context: .
-    container_name: harpia_db_elx
-    environment:
-      - POSTGRES_DB=harpia_siem
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    ports:
-      - "5432:5432"
-    networks:
-      - harpia_elx
-    volumes:
-      - pgdata:/var/lib/postgresql/data/
-
   # kafka services
   zookeeper:
     image: 'bitnami/zookeeper:3.7.0'
@@ -45,7 +31,6 @@ services:
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
     volumes:
-      # - ./bitnami/zookeeper:/bitnami/zookeeper
       - zookeeperdata:/bitnami/zookeeper
   
   kafka:
@@ -71,7 +56,6 @@ services:
     depends_on:
       - zookeeper
     volumes:
-      # - ./bitnami/kafka:/bitnami/kafka
       - kafkadata:/bitnami/kafka
 
   kafdrop:
@@ -86,20 +70,6 @@ services:
       JVM_OPTS: "-Xms16M -Xmx48M -Xss180K -XX:-TieredCompilation -XX:+UseStringDeduplication -noverify"
     depends_on:
       - kafka
-
-  cmak:
-    image: ghcr.io/eshepelyuk/dckr/cmak-3.0.0.5:latest
-    container_name: cmak
-    restart: always
-    command:
-      - "-Dcmak.zkhosts=zookeeper:2181"
-      - "-DbasicAuthentication.enabled=true"
-      - "-DbasicAuthentication.username=username"
-      - "-DbasicAuthentication.password=password"
-    ports:
-      - "9005:9000"
-    networks:
-      - harpia_elx
 
   opensearch-node1:
     image: opensearchproject/opensearch:latest
@@ -146,8 +116,6 @@ networks:
     external: true
 
 volumes:
-  pgdata:
-    driver: local
   zookeeperdata:
     driver: local
   kafkadata:

@@ -2,6 +2,6 @@
 .git
 
 # Mix artifacts
-_build
-deps
+src/_build/
+src/deps/
 *.ez

@@ -7,21 +7,36 @@ help:
 	@grep -E '^\.PHONY: [a-zA-Z_-]+ .*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = "(: |##)"}; {printf "\033[36m%-15s\033[0m %s\n", $$2, $$3}'
 	@echo "========================================================================================"
 	@echo ""
+	@echo "To prepare Python in a virtual environment to execute tests, please run:"
+	@echo "\t virtualenv .venv"
+	@echo "\t source ./.venv/bin/activate"
+	@echo "\t pip install kafka-python"
+	@echo ""
+	@echo "========================================================================================"
+	@echo ""
 
 .PHONY: build ## docker-compose build
 build:
 	docker-compose build
 
-.PHONY: up-kafka ## docker-compose up for kafka containers
-up-kafka:
-	docker-compose up -d harpia_db_elx zookeeper kafka kafdrop cmak
+.PHONY: up ## docker-compose up -d --build --force-recreate
+up:
+	docker-compose up -d --build --force-recreate
 
-.PHONY: run-ingestion ## docker-compose run for harpia_ingestion_ex with iex
-run-ingestion:
+.PHONY: down ## docker-compose down --remove-orphans
+down:
+	docker-compose down --remove-orphans
+
+.PHONY: iex ## iex -S mix (docker exec -it harpia_ingestion_ex sh -c "iex -S mix")
+iex:
 	@echo "========================================================================================"
 	@echo "This will run harpia_ingestion_ex, with an iex terminal prompt"
 	@echo "To test the application, run:"
 	@echo 'ExampleProducer.send_my_message({"Metamorphosis", "Franz Kafka"}, "another_topic")'
 	@echo "========================================================================================"
 	@echo ""
-	docker-compose run harpia_ingestion_ex iex -S mix
+	docker exec -it harpia_ingestion_ex sh -c "iex -S mix"
+
+.PHONY: produce-logs ## run python kafka_producer_test.py to produce logs
+produce-logs:
+	python kafka_producer_test.py
