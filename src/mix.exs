@@ -14,7 +14,7 @@ defmodule ElixirKaffeCodealong.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger, :kaffe],
+      extra_applications: [:logger, :kaffe, :httpoison, :json],
       mod: {ElixirKaffeCodealong.Application, []}
       # now that we're using the Application module, this is where we'll tell it to start.
       # We use the keyword `mod` with applications that start a supervision tree,
@@ -25,7 +25,9 @@ defmodule ElixirKaffeCodealong.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:kaffe, "~> 1.9"}
+      {:kaffe, "~> 1.9"},
+      {:httpoison, "~> 2.0"},
+      {:json, "~> 1.4"}
     ]
   end
 end
